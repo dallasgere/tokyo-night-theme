@@ -24,15 +24,17 @@ COMMENT_LIFT = 0.36  # how far comments sit from the background toward white
 
 # "Edge" pass: sharpens depth and hierarchy without touching hues.
 # Contrast values are WCAG ratios; lightness values are OKLab L (0-1).
-EDGE_SHELL_DROP = 0.05  # how much darker the shell (panels, bars) sits than the editor
+EDGE_SHELL_DROP = 0.022  # subtle step darker than the editor (like Xcode Custom)
 EDGE_SHELL_FLOOR = 0.12  # never push the shell below this lightness
-EDGE_BORDER = 1.45  # divider contrast against the shell
-EDGE_BORDER_VARIANT = 1.25  # quieter dividers inside panels
-EDGE_SELECTED_TINT = 0.25  # how much accent bleeds into selected rows
+EDGE_BORDER = 1.32  # divider contrast against the shell
+EDGE_BORDER_VARIANT = 1.15  # quieter dividers inside panels
+EDGE_SELECTED_TINT = 0.18  # how much accent bleeds into selected rows
 EDGE_SELECTED_TEXT = 6.0  # UI text contrast on a selected row
 EDGE_HOVER_LIFT = 0.035  # hover rows, lifted from the panel
-EDGE_CHROMA = 1.12  # syntax saturation boost
+EDGE_CHROMA = 1.05  # gentle syntax saturation boost without glare
 EDGE_SYNTAX_MIN = 5.5  # every syntax color stays at least this readable
+EDGE_SYNTAX_MAX_L = 0.835  # cap bright syntax tokens (OKLab L) so nothing glares
+EDGE_FG_MAX_L = 0.825  # cap plain code / white text (like Xcode Custom's #c5c7cd)
 EDGE_COMMENT = 3.8  # comments: recessive but comfortable
 EDGE_LINE_NUMBER = 3.0  # inactive gutter numbers recede so code leads
 EDGE_TEXT_MIN = 7.0  # UI text against panels
@@ -410,13 +412,14 @@ CHARCOAL = {
     "indent_active": "#303135",
     "selection": "#303136",
     # Rows lift from a dark-but-not-black shell, so smaller steps than BLACK's.
-    "edge": {"hover_lift": 0.035, "selected_lift": 0.07},
+    "edge": {"hover_lift": 0.035, "selected_lift": 0.07, "fg_max_l": EDGE_FG_MAX_L, "syntax_max_l": EDGE_SYNTAX_MAX_L},
 }
 BLACK_EDGE = {
     "shell_drop": 0.0, "shell_floor": 0.0,  # let the shell and editor both sit at pure black
     "border": 1.2, "border_variant": 1.1,  # faint dividers between panels and tabs
     "hover_lift": 0.2, "selected_lift": 0.26, "selected_tint": 0.12,  # rows stay visible on black
     "selected_text": 5.0,
+    "fg_max_l": 0.795, "syntax_max_l": 0.815,
 }
 
 
@@ -660,6 +663,14 @@ def lift_to(value, bg, target, chroma=1.0):
         L += 0.005
         out = oklab_hex(L, a, b)
     return out
+
+
+def cap_L(value, max_l):
+    """Tone down overly bright whites/tokens to max_l in OKLab, keeping hue and chroma."""
+    L, a, b = to_oklab(rgb(value))
+    if L <= max_l:
+        return value
+    return oklab_hex(max_l, a, b)
 
 
 def at_contrast(bg, target, toward):
@@ -924,13 +935,21 @@ def sharpen(style, palette=None):
     edge = palette.get("edge", {})
     chroma = palette.get("chroma", EDGE_CHROMA)
     editor_bg = style["editor.background"]
-    text = style["editor.foreground"]
+    fg_max_l = edge.get("fg_max_l", EDGE_FG_MAX_L)
+    syntax_max_l = edge.get("syntax_max_l", EDGE_SYNTAX_MAX_L)
+    text = cap_L(style["editor.foreground"], fg_max_l)
+    style["editor.foreground"] = text
+    if "terminal.foreground" in style:
+        style["terminal.foreground"] = cap_L(style["terminal.foreground"], fg_max_l)
 
     # Shell sits a step below the editor so the code surface reads as raised.
     shell_L = to_oklab(rgb(style["background"]))[0]
     editor_L = to_oklab(rgb(editor_bg))[0]
     drop = edge.get("shell_drop", EDGE_SHELL_DROP)
-    target_L = min(shell_L, max(edge.get("shell_floor", EDGE_SHELL_FLOOR), editor_L - drop))
+    if drop > 0:
+        target_L = max(edge.get("shell_floor", EDGE_SHELL_FLOOR), editor_L - drop)
+    else:
+        target_L = min(shell_L, max(edge.get("shell_floor", EDGE_SHELL_FLOOR), editor_L))
     shell = shift(style["background"], target_L - shell_L)
     if editor_L - target_L < drop:  # shell already at the floor: lift the editor
         editor_bg = shift(editor_bg, drop - (editor_L - target_L))
@@ -978,12 +997,16 @@ def sharpen(style, palette=None):
             if key in style:
                 style[key] = blend(style[key][:7], edge["vc_strength"], editor_bg[:7])  # like opacity
 
-    # Syntax: a touch more saturation, never below the readability floor.
+    # Syntax: gentle saturation, readable floor, and a ceiling so bright whites/tokens don't glare.
     for key, entry in style["syntax"].items():
         if key in ("comment", "comment.doc"):
             entry["color"] = lift_to(entry["color"], editor_bg, EDGE_COMMENT)
         elif key not in ("hint", "predictive"):
-            entry["color"] = lift_to(entry["color"], editor_bg, EDGE_SYNTAX_MIN, chroma)
+            col = lift_to(entry["color"], editor_bg, EDGE_SYNTAX_MIN, chroma)
+            # Keep neutral/white tokens at the softer foreground ceiling, colored tokens at syntax_max_l.
+            L, a, b = to_oklab(rgb(col))
+            limit = fg_max_l if (a * a + b * b) ** 0.5 < 0.03 else syntax_max_l
+            entry["color"] = cap_L(col, limit)
 
     return style
 
