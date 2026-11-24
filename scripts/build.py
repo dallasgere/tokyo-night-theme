@@ -95,6 +95,28 @@ def blend(fg, alpha, bg):
     b = [int(bg[i : i + 2], 16) for i in (1, 3, 5)]
     return "#" + "".join(f"{round(x * alpha + y * (1 - alpha)):02x}" for x, y in zip(a, b))
 
+GIT_DIM = 0.65  # gutter bars: this much of the color over the editor, muted like VS Code's
+
+
+def git_style(g):
+    """Build Zed explorer, status, and gutter git colors from a theme's own hues."""
+    return {
+        **{f"{name}{suffix}": c + (a or "")
+           for name, c in {
+               "created": g["added"], "modified": g["modified"],
+               "deleted": g["deleted"], "renamed": g["added"],
+               "conflict": g["conflict"], "ignored": g["ignored"],
+           }.items()
+           for suffix, a in (("", None), (".background", "1f"), (".border", "66"))},
+        "success": g["added"],
+        "version_control.added": g["gutter_added"],
+        "version_control.modified": g["gutter_modified"],
+        "version_control.deleted": g["gutter_deleted"],
+        "version_control.renamed": g["gutter_modified"],
+        "version_control.conflict": g["conflict"],
+        "version_control.ignored": g["ignored"],
+    }
+
 
 # VS Code's git color roles (green added, yellow changed, red deleted, blue
 # changed bar in the gutter) in shades taken from Xcode's own palette.
@@ -450,6 +472,25 @@ def black(config, name=None, file=None, bg=BLACK):
 
 if ROSE_BG in ("black", "charcoal"):
     PALETTES["rose-pine-neutral"] = black(PALETTES["rose-pine-neutral"], bg=BLACK if ROSE_BG == "black" else CHARCOAL)
+
+THEME_GIT = {
+    "added": "#a1cb74",
+    "modified": "#e0af68",
+    "deleted": "#e66e7a",
+    "conflict": "#eb8b67",
+    "ignored": "#636da6",
+    "gutter_added": "#a1cb74",
+    "gutter_modified": "#82aaff",
+    "gutter_deleted": "#ff757f",
+}
+
+for _k in ("tokyo-night", "tokyo-night-neutral"):
+    _base = PALETTES[_k]
+    PALETTES[_k] = {
+        **_base,
+        "style": {**_base.get("style", {}), **git_style(THEME_GIT)},
+        "edge": {**_base.get("edge", {}), "vc_strength": GIT_DIM},
+    }
 
 # Extra themes built from a source palette: source -> [config, ...].
 VARIANTS = {
@@ -990,12 +1031,16 @@ def sharpen(style, palette=None):
     style["editor.active_line_number"] = text
     style["editor.hover_line_number"] = text
 
-    # Gutter diff bars: optionally blended toward the editor so they hint, not shout.
+    # Gutter diff bars: blended toward the editor so they hint, not shout.
     if "vc_strength" in edge:
         for kind in ("added", "modified", "deleted", "renamed", "conflict"):
             key = f"version_control.{kind}"
             if key in style:
                 style[key] = blend(style[key][:7], edge["vc_strength"], editor_bg[:7])  # like opacity
+        if "version_control.added" in style:
+            style["version_control.word_added"] = style["version_control.added"][:7] + "47"
+        if "version_control.deleted" in style:
+            style["version_control.word_deleted"] = style["version_control.deleted"][:7] + "47"
 
     # Syntax: gentle saturation, readable floor, and a ceiling so bright whites/tokens don't glare.
     for key, entry in style["syntax"].items():
