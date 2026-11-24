@@ -1,0 +1,7 @@
+id = "tokyo-night-theme"
+name = "Tokyo Night Theme"
+version = "1.0.0"
+schema_version = 1
+authors = ["Dallas Gere"]
+description = "Tokyo Night dark themes for Zed, including Neutral and all-black variants."
+repository = "https://github.com/dallasgere/tokyo-night-theme"
