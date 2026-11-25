@@ -348,7 +348,7 @@ def build_style(theme, appearance, unbordered=False, all_black=False, folke=Fals
         "background": shell_bg,
         "border": border,
         "border.variant": border_variant,
-        "border.focused": TRANSPARENT if unbordered else border,
+        "border.focused": TRANSPARENT,
         "border.selected": TRANSPARENT,
         "border.transparent": TRANSPARENT,
         "border.disabled": border,
