@@ -1,7 +1,7 @@
 id = "tokyo-night-theme"
 name = "Tokyo Night Theme"
-version = "1.0.0"
+version = "2.0.0"
 schema_version = 1
 authors = ["Dallas Gere"]
-description = "Tokyo Night dark themes for Zed, including an all-black variant."
+description = "Tokyo Night, Storm, Light, and Black themes for Zed (both bordered and unbordered) in a single file, modeled after the official VS Code theme."
 repository = "https://github.com/dallasgere/tokyo-night-theme"
