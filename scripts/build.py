@@ -314,27 +314,27 @@ def build_style(theme, appearance, unbordered=False, all_black=False, folke=Fals
         shell_bg = "#000000"
         elevated_bg = "#13151c"
         line_bg = "#0e0f14"
-        border = TRANSPARENT if unbordered else "#222533"
-        border_variant = TRANSPARENT if unbordered else "#171924"
+        border = TRANSPARENT if unbordered else "#1a1d29"
+        border_variant = TRANSPARENT if unbordered else "#12141c"
     elif folke:
         editor_bg = "#1c1e29"
         shell_bg = editor_bg if unbordered else "#181921"
         elevated_bg = "#252838"
         line_bg = "#232635"
-        border = TRANSPARENT if unbordered else "#2f334a"
-        border_variant = TRANSPARENT if unbordered else "#25283a"
+        border = TRANSPARENT if unbordered else "#272b3d"
+        border_variant = TRANSPARENT if unbordered else "#202332"
     else:
         editor_bg = g("editor.background")
         shell_bg = editor_bg if unbordered else g("sideBar.background", "titleBar.activeBackground", "editor.background")
-        # Crisp navy elevation (avoid milky white-blend haze on dark backgrounds).
+        # Crisp navy elevation & quiet borders (matched to selected row so Zed never draws a bright outline).
         if appearance == "dark":
             elevated_bg = blend("#292e42", 0.55, editor_bg)
-            subtle_border = blend("#3b4261", 0.70, editor_bg)
-            subtle_variant = blend("#3b4261", 0.42, editor_bg)
+            subtle_border = blend("#3b4261", 0.42, editor_bg)
+            subtle_variant = blend("#3b4261", 0.28, editor_bg)
         else:
             elevated_bg = "#dfe1e8"
-            subtle_border = "#c0c3ce"
-            subtle_variant = "#cfd2dc"
+            subtle_border = "#c2c5cf"
+            subtle_variant = "#cdd0d9"
         line_bg = g("editor.lineHighlightBackground")
         border = TRANSPARENT if unbordered else subtle_border
         border_variant = TRANSPARENT if unbordered else subtle_variant
@@ -345,9 +345,13 @@ def build_style(theme, appearance, unbordered=False, all_black=False, folke=Fals
     ui_text = fg
     muted_text = "#787c99" if appearance == "dark" else "#616885"
     disabled_text = "#515670" if appearance == "dark" else "#8e93a8"
-    # Translucent, understated hover & selection rows so file explorer & popovers stay crisp without an opaque slab.
-    hover = with_alpha(accent, "12" if appearance == "dark" else "14")
-    selected = with_alpha(accent, "22" if appearance == "dark" else "24")
+    # Clean opaque hover & selection rows (matching Xcode Custom so no border halo appears around selected files).
+    if appearance == "dark":
+        hover = blend("#3b4261", 0.35, shell_bg)
+        selected = blend("#455078", 0.42, shell_bg)
+    else:
+        hover = blend("#8a93b2", 0.16, shell_bg)
+        selected = blend("#8a93b2", 0.28, shell_bg)
     cursor = "#ffffff" if appearance == "dark" else fg[:7]
     selection = g("editor.selectionBackground") or with_alpha(accent, "3d")
 
