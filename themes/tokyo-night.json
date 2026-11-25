@@ -119,22 +119,22 @@
         "success.background": "#81b88b1a",
         "success.border": "#81b88b66",
         "created": "#a1cb74",
-        "created.background": "#a1cb741f",
+        "created.background": "#a1cb742e",
         "created.border": "#a1cb7466",
         "modified": "#e0af68",
-        "modified.background": "#e0af681f",
+        "modified.background": "#e0af682e",
         "modified.border": "#e0af6866",
         "deleted": "#e66e7a",
-        "deleted.background": "#e66e7a1f",
+        "deleted.background": "#e66e7a2e",
         "deleted.border": "#e66e7a66",
         "renamed": "#a1cb74",
-        "renamed.background": "#a1cb741f",
+        "renamed.background": "#a1cb742e",
         "renamed.border": "#a1cb7466",
         "conflict": "#eb8b67",
-        "conflict.background": "#eb8b671f",
+        "conflict.background": "#eb8b672e",
         "conflict.border": "#eb8b6766",
         "ignored": "#636da6",
-        "ignored.background": "#636da61f",
+        "ignored.background": "#636da62e",
         "ignored.border": "#636da666",
         "hidden": "#6d7691",
         "hidden.background": "#6d76911a",
@@ -145,11 +145,11 @@
         "predictive": "#8691ae",
         "predictive.background": "#8691ae1a",
         "predictive.border": "#8691ae66",
-        "version_control.added": "#728e5a",
-        "version_control.modified": "#5e79b4",
-        "version_control.deleted": "#b05761",
-        "version_control.renamed": "#5e79b4",
-        "version_control.conflict": "#a36551",
+        "version_control.added": "#96bd6e",
+        "version_control.modified": "#7a9fee",
+        "version_control.deleted": "#ed6e78",
+        "version_control.renamed": "#7a9fee",
+        "version_control.conflict": "#da8262",
         "version_control.ignored": "#636da6",
         "players": [
           {
@@ -568,8 +568,8 @@
             "font_weight": 400
           }
         },
-        "version_control.word_added": "#728e5a47",
-        "version_control.word_deleted": "#b0576147"
+        "version_control.word_added": "#96bd6e5c",
+        "version_control.word_deleted": "#ed6e785c"
       }
     },
     {
@@ -688,22 +688,22 @@
         "success.background": "#81b88b1a",
         "success.border": "#81b88b66",
         "created": "#a1cb74",
-        "created.background": "#a1cb741f",
+        "created.background": "#a1cb742e",
         "created.border": "#a1cb7466",
         "modified": "#e0af68",
-        "modified.background": "#e0af681f",
+        "modified.background": "#e0af682e",
         "modified.border": "#e0af6866",
         "deleted": "#e66e7a",
-        "deleted.background": "#e66e7a1f",
+        "deleted.background": "#e66e7a2e",
         "deleted.border": "#e66e7a66",
         "renamed": "#a1cb74",
-        "renamed.background": "#a1cb741f",
+        "renamed.background": "#a1cb742e",
         "renamed.border": "#a1cb7466",
         "conflict": "#eb8b67",
-        "conflict.background": "#eb8b671f",
+        "conflict.background": "#eb8b672e",
         "conflict.border": "#eb8b6766",
         "ignored": "#636da6",
-        "ignored.background": "#636da61f",
+        "ignored.background": "#636da62e",
         "ignored.border": "#636da666",
         "hidden": "#6d7691",
         "hidden.background": "#6d76911a",
@@ -714,11 +714,11 @@
         "predictive": "#8691ae",
         "predictive.background": "#8691ae1a",
         "predictive.border": "#8691ae66",
-        "version_control.added": "#69844b",
-        "version_control.modified": "#546ea6",
-        "version_control.deleted": "#a64c53",
-        "version_control.renamed": "#546ea6",
-        "version_control.conflict": "#995a43",
+        "version_control.added": "#94bb6b",
+        "version_control.modified": "#789ceb",
+        "version_control.deleted": "#eb6c75",
+        "version_control.renamed": "#789ceb",
+        "version_control.conflict": "#d8805f",
         "version_control.ignored": "#636da6",
         "players": [
           {
@@ -1137,8 +1137,8 @@
             "font_weight": 400
           }
         },
-        "version_control.word_added": "#69844b47",
-        "version_control.word_deleted": "#a64c5347"
+        "version_control.word_added": "#94bb6b5c",
+        "version_control.word_deleted": "#eb6c755c"
       }
     }
   ]

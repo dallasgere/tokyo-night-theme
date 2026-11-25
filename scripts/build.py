@@ -95,7 +95,7 @@ def blend(fg, alpha, bg):
     b = [int(bg[i : i + 2], 16) for i in (1, 3, 5)]
     return "#" + "".join(f"{round(x * alpha + y * (1 - alpha)):02x}" for x, y in zip(a, b))
 
-GIT_DIM = 0.65  # gutter bars: this much of the color over the editor, muted like VS Code's
+GIT_DIM = 0.92  # gutter bars: this much of the color over the editor, muted like VS Code's
 
 
 def git_style(g):
@@ -107,7 +107,7 @@ def git_style(g):
                "deleted": g["deleted"], "renamed": g["added"],
                "conflict": g["conflict"], "ignored": g["ignored"],
            }.items()
-           for suffix, a in (("", None), (".background", "1f"), (".border", "66"))},
+           for suffix, a in (("", None), (".background", "2e"), (".border", "66"))},
         "success": g["added"],
         "version_control.added": g["gutter_added"],
         "version_control.modified": g["gutter_modified"],
@@ -1038,9 +1038,9 @@ def sharpen(style, palette=None):
             if key in style:
                 style[key] = blend(style[key][:7], edge["vc_strength"], editor_bg[:7])  # like opacity
         if "version_control.added" in style:
-            style["version_control.word_added"] = style["version_control.added"][:7] + "47"
+            style["version_control.word_added"] = style["version_control.added"][:7] + "5c"
         if "version_control.deleted" in style:
-            style["version_control.word_deleted"] = style["version_control.deleted"][:7] + "47"
+            style["version_control.word_deleted"] = style["version_control.deleted"][:7] + "5c"
 
     # Syntax: gentle saturation, readable floor, and a ceiling so bright whites/tokens don't glare.
     for key, entry in style["syntax"].items():
