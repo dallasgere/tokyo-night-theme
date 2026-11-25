@@ -313,23 +313,28 @@ def build_style(theme, appearance, unbordered=False, all_black=False, folke=Fals
     else:
         editor_bg = g("editor.background")
         shell_bg = editor_bg if unbordered else g("sideBar.background", "titleBar.activeBackground", "editor.background")
-        elevated_bg = blend("#ffffff" if appearance == "dark" else "#000000", 0.05, editor_bg)
+        # Crisp navy elevation (avoid milky white-blend haze on dark backgrounds).
+        if appearance == "dark":
+            elevated_bg = blend("#292e42", 0.55, editor_bg)
+            subtle_border = blend("#3b4261", 0.70, editor_bg)
+            subtle_variant = blend("#3b4261", 0.42, editor_bg)
+        else:
+            elevated_bg = "#dfe1e8"
+            subtle_border = "#c0c3ce"
+            subtle_variant = "#cfd2dc"
         line_bg = g("editor.lineHighlightBackground")
-        # Clean, subtle borders (avoid harsh pure-black #101014 outlines around elevated popovers).
-        subtle_border = blend("#ffffff" if appearance == "dark" else "#000000", 0.11 if appearance == "dark" else 0.14, editor_bg)
-        subtle_variant = blend("#ffffff" if appearance == "dark" else "#000000", 0.07 if appearance == "dark" else 0.09, editor_bg)
         border = TRANSPARENT if unbordered else subtle_border
         border_variant = TRANSPARENT if unbordered else subtle_variant
 
     accent = g("textLink.foreground", "terminal.ansiBlue", "focusBorder") or "#7aa2f7"
     fg = FOLKE["fg"] if folke else g("editor.foreground", "foreground")
-    # Crisp, readable UI text in file explorer & popovers (instead of dim sideBar.foreground #787c99).
+    # Crisp, readable UI text in file explorer & popovers.
     ui_text = fg
     muted_text = "#787c99" if appearance == "dark" else "#616885"
     disabled_text = "#515670" if appearance == "dark" else "#8e93a8"
-    # Distinct hover & selection rows that read cleanly on both the sidebar and elevated popovers.
-    hover = blend(accent[:7], 0.12 if appearance == "dark" else 0.08, elevated_bg)
-    selected = blend(accent[:7], 0.22 if appearance == "dark" else 0.16, elevated_bg)
+    # Translucent, understated hover & selection rows so file explorer & popovers stay crisp without an opaque slab.
+    hover = with_alpha(accent, "12" if appearance == "dark" else "14")
+    selected = with_alpha(accent, "22" if appearance == "dark" else "24")
     cursor = "#ffffff" if appearance == "dark" else fg[:7]
     selection = g("editor.selectionBackground") or with_alpha(accent, "3d")
 
