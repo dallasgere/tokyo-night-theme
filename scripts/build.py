@@ -42,7 +42,7 @@ EDGE_TEXT_MUTED_MIN = 4.5
 
 SKIP_SUFFIXES = ("-unbordered", "-uniform")
 SKIP_PALETTES = {"atom-one-dark"}
-ONLY_PALETTES = {"tokyo-night", "tokyo-night-neutral"}
+ONLY_PALETTES = {"tokyo-night"}
 
 # Xcode's classic Default (Dark) palette: the softer pastel set Xcode is known for.
 # Tree-sitter can't tell project symbols from SDK ones, so each role gets its own

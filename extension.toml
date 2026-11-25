@@ -3,5 +3,5 @@ name = "Tokyo Night Theme"
 version = "1.0.0"
 schema_version = 1
 authors = ["Dallas Gere"]
-description = "Tokyo Night dark themes for Zed, including Neutral and all-black variants."
+description = "Tokyo Night dark themes for Zed, including an all-black variant."
 repository = "https://github.com/dallasgere/tokyo-night-theme"

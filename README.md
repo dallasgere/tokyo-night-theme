@@ -1,12 +1,12 @@
 # Tokyo Night Theme
 
-Tokyo Night dark themes for [Zed](https://zed.dev) (`Tokyo Night`, `Tokyo Night: Neutral`, and `Tokyo Night Black`), generated from the [Vine](https://github.com/dallasgere/vine) VS Code themes with syntax colors from `folke/tokyonight.nvim` (moon).
+Tokyo Night dark themes for [Zed](https://zed.dev) (`Tokyo Night` and `Tokyo Night Black`), generated from the [Vine](https://github.com/dallasgere/vine) VS Code themes with syntax colors from `folke/tokyonight.nvim` (moon).
 
 ## Install locally
 
 1. In Zed, open the command palette and run `zed: install dev extension`.
 2. Select this folder.
-3. Run `theme selector: toggle` and pick `Tokyo Night`, `Tokyo Night: Neutral`, or `Tokyo Night Black`.
+3. Run `theme selector: toggle` and pick `Tokyo Night` or `Tokyo Night Black`.
 
 Or copy the files in `themes/` into `~/.config/zed/themes/`.
 
