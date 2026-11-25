@@ -28,8 +28,8 @@ VARIANTS = [
     ("tokyo-night-storm-color-theme.json", "Tokyo Night Storm", "dark", False, False),
     ("tokyo-night-light-color-theme.json", "Tokyo Night Light", "light", False, False),
     ("tokyo-night-color-theme.json", "Tokyo Night Black", "dark", True, False),
-    ("tokyo-night-color-theme.json", "Tokyo Night (Folke)", "dark", False, True),
-    ("tokyo-night-color-theme.json", "Tokyo Night (Folke) Black", "dark", True, True),
+    ("tokyo-night-color-theme.json", "Tokyo Night (Nvim)", "dark", False, True),
+    ("tokyo-night-color-theme.json", "Tokyo Night (Nvim) Black", "dark", True, True),
 ]
 
 # folke/tokyonight.nvim "moon" palette (preserved alongside the official VS Code variants).

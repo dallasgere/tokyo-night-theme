@@ -4524,7 +4524,7 @@
       }
     },
     {
-      "name": "Tokyo Night (Folke)",
+      "name": "Tokyo Night (Nvim)",
       "appearance": "dark",
       "style": {
         "background.appearance": "opaque",
@@ -5089,7 +5089,7 @@
       }
     },
     {
-      "name": "Tokyo Night (Folke) Unbordered",
+      "name": "Tokyo Night (Nvim) Unbordered",
       "appearance": "dark",
       "style": {
         "background.appearance": "opaque",
@@ -5654,7 +5654,7 @@
       }
     },
     {
-      "name": "Tokyo Night (Folke) Black",
+      "name": "Tokyo Night (Nvim) Black",
       "appearance": "dark",
       "style": {
         "background.appearance": "opaque",
@@ -6219,7 +6219,7 @@
       }
     },
     {
-      "name": "Tokyo Night (Folke) Black Unbordered",
+      "name": "Tokyo Night (Nvim) Black Unbordered",
       "appearance": "dark",
       "style": {
         "background.appearance": "opaque",

@@ -8,8 +8,8 @@ Faithful [Zed](https://zed.dev) port of [tokyo-night/tokyo-night-vscode-theme](h
 - **Tokyo Night Storm** / **Tokyo Night Storm Unbordered**
 - **Tokyo Night Light** / **Tokyo Night Light Unbordered**
 - **Tokyo Night Black** / **Tokyo Night Black Unbordered**
-- **Tokyo Night (Folke)** / **Tokyo Night (Folke) Unbordered**
-- **Tokyo Night (Folke) Black** / **Tokyo Night (Folke) Black Unbordered**
+- **Tokyo Night (Nvim)** / **Tokyo Night (Nvim) Unbordered**
+- **Tokyo Night (Nvim) Black** / **Tokyo Night (Nvim) Black Unbordered**
 
 ## Install locally
 
