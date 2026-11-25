@@ -1056,6 +1056,27 @@ def sharpen(style, palette=None):
     return style
 
 
+
+def unbordered_style(style):
+    """Return a seamless, borderless variant of a built Zed style."""
+    ed = style["editor.background"]
+    elev = style.get("elevated_surface.background", ed)
+    out = dict(style)
+    for k in (
+        "background", "panel.background", "surface.background",
+        "status_bar.background", "title_bar.background", "title_bar.inactive_background",
+        "tab_bar.background", "tab.inactive_background", "toolbar.background",
+    ):
+        out[k] = ed
+    out["tab.active_background"] = elev
+    for k in (
+        "border", "border.variant", "border.disabled", "border.focused",
+        "border.selected", "pane_group.border", "pane.focused_border", "panel.focused_border",
+    ):
+        out[k] = TRANSPARENT
+    return out
+
+
 def main():
     source = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_SOURCE
     files = sorted(source.glob("*-color-theme.json"))
@@ -1072,11 +1093,10 @@ def main():
             theme = remap_colors(json.loads(path.read_text()), config.get("remap", {}))
             theme["colors"].update(config.get("colors", {}))
             theme["name"] = config.get("name", theme["name"]).removeprefix("Vine: ")
-            built.append({
-                "name": theme["name"],
-                "appearance": theme.get("type", "dark"),
-                "style": build_style(theme, config),
-            })
+            style = build_style(theme, config)
+            appearance = theme.get("type", "dark")
+            built.append({"name": theme["name"], "appearance": appearance, "style": style})
+            built.append({"name": f"{theme['name']} Unbordered", "appearance": appearance, "style": unbordered_style(style)})
 
     family = {"$schema": SCHEMA, "name": "Tokyo Night", "author": AUTHOR, "themes": built}
     (OUT / "tokyo-night.json").write_text(json.dumps(family, indent=2, ensure_ascii=False) + "\n")
