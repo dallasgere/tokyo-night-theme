@@ -398,7 +398,7 @@ def build_style(theme, appearance, unbordered=False, all_black=False, folke=Fals
         "search.match_background": g("editor.findMatchHighlightBackground"),
         "search.active_match_background": g("editor.findMatchBackground"),
         "panel.background": shell_bg,
-        "panel.focused_border": TRANSPARENT if unbordered else border,
+        "panel.focused_border": TRANSPARENT,
         "panel.indent_guide": g("tree.indentGuidesStroke", "editorIndentGuide.background"),
         "panel.indent_guide_active": g("editorIndentGuide.activeBackground", "tree.indentGuidesStroke"),
         "panel.indent_guide_hover": g("editorIndentGuide.activeBackground", "tree.indentGuidesStroke"),
