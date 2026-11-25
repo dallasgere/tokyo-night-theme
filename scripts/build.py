@@ -1063,6 +1063,7 @@ def main():
         sys.exit(f"No *-color-theme.json files found in {source}")
 
     OUT.mkdir(exist_ok=True)
+    built = []
     for path in files:
         palette = path.name.removesuffix("-color-theme.json")
         if palette.endswith(SKIP_SUFFIXES) or palette in SKIP_PALETTES or palette not in ONLY_PALETTES:
@@ -1071,14 +1072,16 @@ def main():
             theme = remap_colors(json.loads(path.read_text()), config.get("remap", {}))
             theme["colors"].update(config.get("colors", {}))
             theme["name"] = config.get("name", theme["name"]).removeprefix("Vine: ")
-            write(config.get("file", palette), theme, config)
+            built.append({
+                "name": theme["name"],
+                "appearance": theme.get("type", "dark"),
+                "style": build_style(theme, config),
+            })
 
-
-def write(palette, theme, config):
-    base = {"name": theme["name"], "appearance": theme.get("type", "dark"), "style": build_style(theme, config)}
-    family = {"$schema": SCHEMA, "name": theme["name"], "author": AUTHOR, "themes": [base]}
-    (OUT / f"{palette}.json").write_text(json.dumps(family, indent=2, ensure_ascii=False) + "\n")
-    print(f"themes/{palette}.json: {theme['name']}")
+    family = {"$schema": SCHEMA, "name": "Tokyo Night", "author": AUTHOR, "themes": built}
+    (OUT / "tokyo-night.json").write_text(json.dumps(family, indent=2, ensure_ascii=False) + "\n")
+    for entry in built:
+        print(f"themes/tokyo-night.json: {entry['name']}")
 
 
 if __name__ == "__main__":
