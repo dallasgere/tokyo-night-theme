@@ -22,13 +22,35 @@ AUTHOR = "Dallas Gere"
 TRANSPARENT = "#00000000"
 GIT_DIM = 0.92
 
-# (source file, display name, appearance, all_black)
+# (source file, display name, appearance, all_black, folke)
 VARIANTS = [
-    ("tokyo-night-color-theme.json", "Tokyo Night", "dark", False),
-    ("tokyo-night-storm-color-theme.json", "Tokyo Night Storm", "dark", False),
-    ("tokyo-night-light-color-theme.json", "Tokyo Night Light", "light", False),
-    ("tokyo-night-color-theme.json", "Tokyo Night Black", "dark", True),
+    ("tokyo-night-color-theme.json", "Tokyo Night", "dark", False, False),
+    ("tokyo-night-storm-color-theme.json", "Tokyo Night Storm", "dark", False, False),
+    ("tokyo-night-light-color-theme.json", "Tokyo Night Light", "light", False, False),
+    ("tokyo-night-color-theme.json", "Tokyo Night Black", "dark", True, False),
+    ("tokyo-night-color-theme.json", "Tokyo Night (Folke)", "dark", False, True),
+    ("tokyo-night-color-theme.json", "Tokyo Night (Folke) Black", "dark", True, True),
 ]
+
+# folke/tokyonight.nvim "moon" palette (preserved alongside the official VS Code variants).
+FOLKE = {
+    "fg": "#c2ccf0",
+    "fg_dark": "#828bb8",
+    "comment": "#636da6",
+    "blue": "#82aaff",
+    "blue1": "#65bcff",
+    "blue5": "#89ddff",
+    "blue6": "#98dedd",
+    "cyan": "#86e1fc",
+    "green": "#b8de82",
+    "green1": "#4fd6be",
+    "magenta": "#c099ff",
+    "purple": "#fca7ea",
+    "orange": "#ff966c",
+    "yellow": "#f2be72",
+    "red": "#ff757f",
+    "bg": "#222436",
+}
 
 # Crisp, theme-harmonized git palettes for dark & light Tokyo Night.
 GIT_PALETTES = {
@@ -222,7 +244,54 @@ def build_syntax(theme, c, git):
     return dict(sorted(syntax.items()))
 
 
-def build_style(theme, appearance, unbordered=False, all_black=False):
+def build_folke_syntax(git):
+    groups = [
+        (FOLKE["comment"], "italic", ("comment", "comment.doc")),
+        (FOLKE["purple"], "normal", (
+            "keyword", "keyword.coroutine", "keyword.return", "keyword.modifier",
+            "keyword.type", "keyword.control",
+        )),
+        (FOLKE["magenta"], "normal", (
+            "keyword.conditional", "keyword.repeat", "keyword.exception",
+            "keyword.function", "constructor", "string.escape",
+        )),
+        (FOLKE["cyan"], "normal", (
+            "keyword.import", "keyword.export", "keyword.directive", "preproc",
+            "function.special", "attribute", "namespace",
+        )),
+        (FOLKE["blue1"], "normal", (
+            "keyword.storage", "type", "type.parameter", "enum", "constant.builtin",
+            "function.builtin", "string.special", "string.special.symbol",
+        )),
+        (FOLKE["blue5"], "normal", (
+            "operator", "keyword.operator", "punctuation.delimiter",
+            "punctuation.special", "punctuation.list_marker",
+        )),
+        (FOLKE["blue"], "normal", (
+            "function", "function.call", "function.definition", "function.method",
+            "function.method.call", "label", "title", "link_uri",
+        )),
+        (FOLKE["fg_dark"], "normal", ("punctuation", "punctuation.bracket", "hint", "predictive")),
+        (FOLKE["green"], "normal", ("string", "text.literal")),
+        (FOLKE["green1"], "normal", ("property", "variable.member", "property.json_key", "link_text")),
+        (FOLKE["orange"], "normal", ("constant", "boolean", "number", "variant", "punctuation.markup")),
+        (FOLKE["yellow"], "normal", ("variable.parameter", "string.doc")),
+        (FOLKE["red"], "normal", ("variable.special", "tag", "tag.doctype", "selector", "selector.pseudo")),
+        (FOLKE["fg"], "normal", ("variable", "embedded", "primary", "emphasis", "emphasis.strong")),
+        (FOLKE["blue6"], "normal", ("string.regex",)),
+        (blend(FOLKE["blue1"], 0.8, FOLKE["bg"]), "normal", ("type.builtin",)),
+        (blend(FOLKE["blue1"], 0.7, FOLKE["fg"]), "normal", ("type.interface",)),
+        (git["added"], "normal", ("diff.plus",)),
+        (git["deleted"], "normal", ("diff.minus",)),
+    ]
+    syntax = {}
+    for col, fs, keys in groups:
+        for k in keys:
+            syntax[k] = {"color": col, "font_style": fs, "font_weight": 400}
+    return dict(sorted(syntax.items()))
+
+
+def build_style(theme, appearance, unbordered=False, all_black=False, folke=False):
     c = {k: norm_color(v) for k, v in theme.get("colors", {}).items()}
     g = lambda *keys: next((c[k] for k in keys if c.get(k)), None)
     git = GIT_PALETTES[appearance]
@@ -230,27 +299,37 @@ def build_style(theme, appearance, unbordered=False, all_black=False):
     if all_black:
         editor_bg = "#000000"
         shell_bg = "#000000"
-        elevated_bg = "#121318"
+        elevated_bg = "#13151c"
         line_bg = "#0e0f14"
-        border = TRANSPARENT if unbordered else "#1c1e26"
-        border_variant = TRANSPARENT if unbordered else "#14161c"
+        border = TRANSPARENT if unbordered else "#222533"
+        border_variant = TRANSPARENT if unbordered else "#171924"
+    elif folke:
+        editor_bg = "#1c1e29"
+        shell_bg = editor_bg if unbordered else "#181921"
+        elevated_bg = "#252838"
+        line_bg = "#232635"
+        border = TRANSPARENT if unbordered else "#2f334a"
+        border_variant = TRANSPARENT if unbordered else "#25283a"
     else:
         editor_bg = g("editor.background")
         shell_bg = editor_bg if unbordered else g("sideBar.background", "titleBar.activeBackground", "editor.background")
-        elevated_bg = g("editorWidget.background", "menu.background", "sideBar.background")
-        if elevated_bg == editor_bg or elevated_bg == shell_bg:
-            elevated_bg = blend("#ffffff" if appearance == "dark" else "#000000", 0.06, editor_bg)
+        elevated_bg = blend("#ffffff" if appearance == "dark" else "#000000", 0.05, editor_bg)
         line_bg = g("editor.lineHighlightBackground")
-        border = TRANSPARENT if unbordered else (g("sideBar.border", "editorGroup.border", "panel.border") or TRANSPARENT)
-        border_variant = TRANSPARENT if unbordered else (g("panel.border", "editorGroup.border", "sideBar.border") or border)
+        # Clean, subtle borders (avoid harsh pure-black #101014 outlines around elevated popovers).
+        subtle_border = blend("#ffffff" if appearance == "dark" else "#000000", 0.11 if appearance == "dark" else 0.14, editor_bg)
+        subtle_variant = blend("#ffffff" if appearance == "dark" else "#000000", 0.07 if appearance == "dark" else 0.09, editor_bg)
+        border = TRANSPARENT if unbordered else subtle_border
+        border_variant = TRANSPARENT if unbordered else subtle_variant
 
-    accent = g("textLink.foreground", "terminal.ansiBlue", "focusBorder")
-    fg = g("editor.foreground", "foreground")
-    ui_text = g("sideBar.foreground", "foreground", "editor.foreground")
-    muted_text = g("descriptionForeground", "tab.inactiveForeground", "editorLineNumber.foreground")
-    disabled_text = g("disabledForeground", "editorLineNumber.foreground")
-    hover = blend(fg[:7], 0.06 if appearance == "dark" else 0.05, shell_bg[:7])
-    selected = blend(fg[:7], 0.11 if appearance == "dark" else 0.09, shell_bg[:7])
+    accent = g("textLink.foreground", "terminal.ansiBlue", "focusBorder") or "#7aa2f7"
+    fg = FOLKE["fg"] if folke else g("editor.foreground", "foreground")
+    # Crisp, readable UI text in file explorer & popovers (instead of dim sideBar.foreground #787c99).
+    ui_text = fg
+    muted_text = "#787c99" if appearance == "dark" else "#616885"
+    disabled_text = "#515670" if appearance == "dark" else "#8e93a8"
+    # Distinct hover & selection rows that read cleanly on both the sidebar and elevated popovers.
+    hover = blend(accent[:7], 0.12 if appearance == "dark" else 0.08, elevated_bg)
+    selected = blend(accent[:7], 0.22 if appearance == "dark" else 0.16, elevated_bg)
     cursor = "#ffffff" if appearance == "dark" else fg[:7]
     selection = g("editor.selectionBackground") or with_alpha(accent, "3d")
 
@@ -399,7 +478,7 @@ def build_style(theme, appearance, unbordered=False, all_black=False):
         if c.get(f"editorBracketHighlight.foreground{i}")
     ] or [p for p in player_colors[:6] if p]
 
-    style["syntax"] = build_syntax(theme, c, git)
+    style["syntax"] = build_folke_syntax(git) if folke else build_syntax(theme, c, git)
     return {k: v for k, v in style.items() if v is not None}
 
 
@@ -407,14 +486,14 @@ def main():
     source = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_SOURCE
     OUT.mkdir(exist_ok=True)
     themes = []
-    for fname, label, appearance, all_black in VARIANTS:
+    for fname, label, appearance, all_black, folke in VARIANTS:
         raw = json.loads((source / fname).read_text())
         for unbordered in (False, True):
             name = f"{label} Unbordered" if unbordered else label
             themes.append({
                 "name": name,
                 "appearance": appearance,
-                "style": build_style(raw, appearance, unbordered=unbordered, all_black=all_black),
+                "style": build_style(raw, appearance, unbordered=unbordered, all_black=all_black, folke=folke),
             })
 
     family = {"$schema": SCHEMA, "name": "Tokyo Night", "author": AUTHOR, "themes": themes}
