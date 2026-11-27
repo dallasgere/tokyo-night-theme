@@ -292,6 +292,18 @@ def build_folke_syntax(git):
 
 
 
+
+def subheader_bg(editor_bg, fg):
+    """Clearly distinct multibuffer / git diff file header background."""
+    def _mix(a, t, b):
+        ca = [int(a[i : i + 2], 16) for i in (1, 3, 5)]
+        cb = [int(b[i : i + 2], 16) for i in (1, 3, 5)]
+        return "#" + "".join(f"{round(x * t + y * (1 - t)):02x}" for x, y in zip(ca, cb))
+    is_light = int(editor_bg[1:3], 16) > 128
+    # Lift cleanly on dark themes (14% toward fg), darken slightly on light themes (10% toward fg).
+    return _mix(fg[:7], 0.10 if is_light else 0.14, editor_bg[:7])
+
+
 def visible_invisible(fg, selection, editor_bg):
     """Compute editor.invisible so whitespace dots stay clearly legible over selected text."""
     def _mix(a, t, b):
@@ -501,6 +513,7 @@ def build_style(theme, appearance, unbordered=False, all_black=False, folke=Fals
     ] or [p for p in player_colors[:6] if p]
 
     style["editor.invisible"] = visible_invisible(fg, selection, editor_bg)
+    style["editor.subheader.background"] = subheader_bg(editor_bg, fg)
     style["syntax"] = build_folke_syntax(git) if folke else build_syntax(theme, c, git)
     return {k: v for k, v in style.items() if v is not None}
 
